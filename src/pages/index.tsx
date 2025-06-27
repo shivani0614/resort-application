@@ -1,200 +1,132 @@
-// File: pages/index.tsx
+// pages/index.tsx
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { Sun, Mountain, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { Sun, Sparkles, Mountain } from "lucide-react";
 
 export default function Home() {
-  const [doorsOpen, setDoorsOpen] = useState(false);
-  const router = useRouter();
-  // useEffect(() => {
-  //   // Open doors after a short delay (e.g. 1 second)
-  //   const timer = setTimeout(() => setDoorsOpen(true), 1000)
-  //   return () => clearTimeout(timer)
-  // }, [])
+  const [showIntro, setShowIntro] = useState(true);
+
   useEffect(() => {
-    // Start opening doors animation immediately
-    setDoorsOpen(true);
-
-    // Navigate to /home after the animation duration (3 seconds + small buffer)
-    const timeout = setTimeout(() => {
-      router.push("/"); // Change '/home' if your actual home page is at another route
-    }, 3100); // 3100 ms matches 3 seconds animation duration + 100 ms buffer
-
-    // Cleanup timeout if component unmounts before timeout fires
-    return () => clearTimeout(timeout);
-  }, [router]);
+    const timer = setTimeout(() => setShowIntro(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
       <Head>
-        <title>Paradise Retreat – Luxury Resort in India</title>
-        <meta
-          name="description"
-          content="Escape to nature with Paradise Retreat – a luxury eco-resort in India."
-        />
+        <title>Paradise Retreat | 3D Entrance</title>
+        <meta name="description" content="A luxury eco-resort experience like no other." />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-br from-blue-100 to-yellow-50 text-gray-800 relative overflow-hidden">
-        {/* Doors Animation */}
+      <main className="relative min-h-screen bg-gradient-to-tr from-blue-50 to-yellow-50 overflow-hidden">
+        {/* 3D Entrance */}
         <AnimatePresence>
-          {!doorsOpen && (
-            <>
-              {/* Left Door */}
-              <motion.div
-                initial={{ x: 0 }}
-                animate={{ x: "-100%" }}
-                exit={{ x: "-100%" }}
-                transition={{ duration: 3, ease: "easeInOut" }}
-                className="fixed top-0 left-0 w-1/2 h-screen z-50 origin-left relative"
-                style={{
-                  backgroundImage: "url('/door-texture.avif')",
-                  backgroundSize: "center",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  boxShadow: "inset -5px 0 15px rgba(0, 0, 0, 0.5)",
-                  borderRight: "4px solid #5a3e1b",
-                }}
-              >
-                {/* Left door handle */}
-                <div
-                  className="absolute top-1/2 right-8 w-6 h-16 rounded-lg bg-yellow-700 shadow-lg"
-                  style={{ transform: "translateY(-50%)" }}
+          {showIntro && (
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#1f1c2c] to-[#928DAB]"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <div className="flex perspective-1000 w-full h-full items-center justify-center relative overflow-hidden">
+                <motion.div
+                  initial={{ rotateY: 0 }}
+                  animate={{ rotateY: -90 }}
+                  transition={{ duration: 2, ease: "easeInOut", delay: 1 }}
+                  className="w-1/2 h-full bg-[url('/door-left.jpg')] bg-cover bg-center shadow-2xl origin-right transform-style-preserve-3d"
                 />
-              </motion.div>
-
-              {/* Right Door */}
-              <motion.div
-                initial={{ x: 0 }}
-                animate={{ x: "100%" }}
-                exit={{ x: "100%" }}
-                transition={{ duration: 3, ease: "easeInOut" }}
-                className="fixed top-0 right-0 w-1/2 h-screen z-50 origin-right relative"
-                style={{
-                  backgroundImage: "url('/door-texture.avif')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  boxShadow: "inset 5px 0 15px rgba(0, 0, 0, 0.5)",
-                  borderLeft: "4px solid #5a3e1b",
-                }}
-              >
-                {/* Right door handle */}
-                <div
-                  className="absolute top-1/2 left-8 w-6 h-16 rounded-lg bg-yellow-700 shadow-lg"
-                  style={{ transform: "translateY(-50%)" }}
+                <motion.div
+                  initial={{ rotateY: 0 }}
+                  animate={{ rotateY: 90 }}
+                  transition={{ duration: 2, ease: "easeInOut", delay: 1 }}
+                  className="w-1/2 h-full bg-[url('/door-right.jpg')] bg-cover bg-center shadow-2xl origin-left transform-style-preserve-3d"
                 />
-              </motion.div>
-            </>
+              </div>
+              <motion.h1
+                className="absolute text-white text-4xl md:text-5xl font-bold drop-shadow-2xl"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                Welcome to Paradise Retreat
+              </motion.h1>
+            </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Actual Page Content */}
-        {doorsOpen && (
+        {/* Real Content */}
+        {!showIntro && (
           <>
-            {/* Header */}
-            <header className="flex justify-between items-center p-6 shadow bg-white z-10 relative">
-              <h1 className="text-2xl font-bold flex items-center gap-2 text-teal-600">
-                <Sun className="text-yellow-400" />
-                Paradise Retreat
-              </h1>
-              <nav className="flex gap-6 text-sm font-medium">
-                <Link href="/" className="hover:text-teal-700">
-                  Home
-                </Link>
-                <Link href="/rooms" className="hover:text-teal-700">
-                  Rooms
-                </Link>
-                <Link href="/gallery" className="hover:text-teal-700">
-                  Gallery
-                </Link>
-                <Link href="/spa" className="hover:text-teal-700">
-                  Spa
-                </Link>
-                <Link href="/contact" className="hover:text-teal-700">
-                  Contact
-                </Link>
-              </nav>
-            </header>
-
-            {/* Hero Section */}
-            <section className="grid md:grid-cols-2 items-center px-8 py-16 gap-10 relative z-10">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
+            <section className="pt-12 md:pt-20 px-6 text-center">
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
+                className="text-5xl md:text-6xl font-bold text-teal-800 mb-4"
               >
-                <h2 className="text-4xl font-bold text-teal-800 mb-4">
-                  Luxury in Nature
-                </h2>
-                <p className="text-lg text-gray-700 mb-6">
-                  Welcome to Paradise Retreat — a luxury resort nestled in the
-                  hills of India. Discover wellness, adventure, and peace.
-                </p>
-                <button className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition">
-                  Explore Packages
-                </button>
-              </motion.div>
+                Nature’s Luxury Awaits
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-lg text-gray-600 max-w-xl mx-auto"
+              >
+                Step into tranquility at our eco-luxury resort nestled in the hills of India.
+              </motion.p>
 
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1, delay: 0.3 }}
-              >
-                <Image
-                  src="/resort-hero.jpg"
-                  alt="Resort"
-                  width={800}
-                  height={500}
-                  className="rounded-3xl shadow-lg w-full"
-                />
-              </motion.div>
+              <div className="flex justify-center mt-8 gap-4 flex-wrap">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow hover:bg-orange-600"
+                >
+                  Explore Retreats
+                </motion.button>
+                <motion.a
+                  href="/booking"
+                  whileHover={{ scale: 1.1 }}
+                  className="bg-teal-600 text-white px-6 py-3 rounded-lg shadow hover:bg-teal-700"
+                >
+                  Book Now
+                </motion.a>
+              </div>
             </section>
 
-            {/* Features Section */}
-            <section className="px-8 pb-20 relative z-10">
+            <section className="px-6 py-20">
               <h3 className="text-3xl font-semibold text-center text-teal-700 mb-10">
-                Why Choose Us
+                What Makes Us Unique
               </h3>
-              <div className="grid md:grid-cols-3 gap-8">
+              <div className="grid md:grid-cols-3 gap-10 text-center max-w-6xl mx-auto">
                 {[
                   {
-                    icon: <Mountain className="text-teal-500 w-10 h-10" />,
+                    icon: <Mountain className="text-teal-600 w-10 h-10 mx-auto" />,
                     title: "Scenic Views",
-                    desc: "Wake up to India’s most beautiful landscapes.",
+                    desc: "Panoramic hillscapes and serene forest walks.",
                   },
                   {
-                    icon: <Sparkles className="text-yellow-500 w-10 h-10" />,
-                    title: "Luxury Villas",
-                    desc: "Eco-luxury stays with all modern comforts.",
+                    icon: <Sparkles className="text-yellow-500 w-10 h-10 mx-auto" />,
+                    title: "Eco Villas",
+                    desc: "Modern comfort fused with nature's charm.",
                   },
                   {
-                    icon: <Sun className="text-orange-400 w-10 h-10" />,
-                    title: "Wellness Spa",
-                    desc: "Ayurvedic treatments & yoga by certified experts.",
+                    icon: <Sun className="text-orange-400 w-10 h-10 mx-auto" />,
+                    title: "Holistic Wellness",
+                    desc: "Ayurvedic therapies, spa rituals, and meditation.",
                   },
                 ].map((feature, i) => (
                   <motion.div
                     key={i}
                     whileHover={{ scale: 1.05 }}
-                    className="bg-white rounded-xl shadow-md p-6 text-center"
+                    className="bg-white p-8 rounded-xl shadow-lg"
                   >
-                    <div className="mb-4">{feature.icon}</div>
-                    <h4 className="font-bold text-xl text-teal-700">
-                      {feature.title}
-                    </h4>
+                    {feature.icon}
+                    <h4 className="text-xl font-bold text-teal-800 mt-4">{feature.title}</h4>
                     <p className="text-gray-600 mt-2">{feature.desc}</p>
                   </motion.div>
                 ))}
               </div>
             </section>
-
-            <footer className="text-center text-gray-500 py-8 border-t relative z-10">
-              © 2025 Paradise Retreat, India
-            </footer>
           </>
         )}
       </main>
